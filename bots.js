@@ -1,54 +1,50 @@
 const mineflayer = require("mineflayer")
 
-console.log("=== FINAL CLEAN BOT SCRIPT ===")
+console.log("=== REAL NAME BOT SCRIPT ACTIVE ===")
 
 const HOST = "budget-1.vulcanmc.fun"
 const PORT = 25007
 const JOIN_DELAY = 8000
 
+// 👇 REAL PLAYER-LIKE NAMES (EDIT HERE)
 const BOT_NAMES = [
   "YagiSheep",
   "Istieler",
   "dreamguy",
   "demons_here",
-  "Sm_Gop",
-  "ShadowX",
-  "FireLad",
-  "KnightOP",
-  "DarkSoul",
-  "IceWolf",
-  "RogueYT",
-  "SwiftKill"
+  "Sm_Gop"
 ]
 
-let i = 0
+let index = 0
 
 function startBot(name) {
-  console.log("Starting:", name)
+  console.log("Starting bot with name:", name)
 
   const bot = mineflayer.createBot({
     host: HOST,
     port: PORT,
-    username: name,
+    username: name,   // ✅ FIXED NAME
     version: false
   })
 
-  bot.once("login", () => console.log("[LOGIN]", name))
-  bot.once("spawn", () => console.log("[SPAWN]", name))
+  bot.once("login", () => {
+    console.log("[LOGIN OK]", name)
+  })
 
   bot.on("kicked", r => console.log("[KICKED]", name, r))
   bot.on("error", e => console.log("[ERROR]", name, e.message))
 }
 
 const interval = setInterval(() => {
-  if (i >= BOT_NAMES.length) {
+  if (index >= BOT_NAMES.length) {
     clearInterval(interval)
     return
   }
-  startBot(BOT_NAMES[i])
-  i++
+
+  startBot(BOT_NAMES[index])
+  index++
 }, JOIN_DELAY)
 
 setInterval(() => {
-  console.log("Alive:", i)
+  console.log("Alive | Bots started:", index)
 }, 60000)

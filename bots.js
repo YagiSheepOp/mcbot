@@ -1,24 +1,30 @@
 const mineflayer = require("mineflayer")
 
-console.log("=== BASELINE BOT SCRIPT LOADED ===")
+console.log("=== FINAL CLEAN BOT SCRIPT ===")
 
 const HOST = "budget-1.vulcanmc.fun"
 const PORT = 25007
-
-const JOIN_DELAY = 8000   // slow & safe
+const JOIN_DELAY = 8000
 
 const BOT_NAMES = [
   "YagiSheep",
   "Istieler",
   "dreamguy",
   "demons_here",
-  "Sm_Gop"
-] // START WITH 5 ONLY
+  "Sm_Gop",
+  "ShadowX",
+  "FireLad",
+  "KnightOP",
+  "DarkSoul",
+  "IceWolf",
+  "RogueYT",
+  "SwiftKill"
+]
 
-let index = 0
+let i = 0
 
 function startBot(name) {
-  console.log("Attempting:", name)
+  console.log("Starting:", name)
 
   const bot = mineflayer.createBot({
     host: HOST,
@@ -27,34 +33,22 @@ function startBot(name) {
     version: false
   })
 
-  bot.on("login", () => {
-    console.log("[LOGIN OK]", name)
-  })
+  bot.once("login", () => console.log("[LOGIN]", name))
+  bot.once("spawn", () => console.log("[SPAWN]", name))
 
-  bot.on("spawn", () => {
-    console.log("[SPAWN OK]", name)
-  })
-
-  bot.on("kicked", reason => {
-    console.log("[KICKED]", name, reason)
-  })
-
-  bot.on("error", err => {
-    console.log("[ERROR]", name, err.message)
-  })
+  bot.on("kicked", r => console.log("[KICKED]", name, r))
+  bot.on("error", e => console.log("[ERROR]", name, e.message))
 }
 
 const interval = setInterval(() => {
-  if (index >= BOT_NAMES.length) {
+  if (i >= BOT_NAMES.length) {
     clearInterval(interval)
-    console.log("Done attempting bots.")
     return
   }
-
-  startBot(BOT_NAMES[index])
-  index++
+  startBot(BOT_NAMES[i])
+  i++
 }, JOIN_DELAY)
 
 setInterval(() => {
-  console.log("Alive | Tried:", index)
+  console.log("Alive:", i)
 }, 60000)

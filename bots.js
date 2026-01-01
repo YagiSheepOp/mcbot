@@ -1,82 +1,60 @@
 const mineflayer = require("mineflayer")
 
-console.log("=== BOT SCRIPT CLEAN v4 ===")
+console.log("=== BASELINE BOT SCRIPT LOADED ===")
 
 const HOST = "budget-1.vulcanmc.fun"
 const PORT = 25007
 
-// SLOW JOIN (important)
-const JOIN_DELAY = 7000
+const JOIN_DELAY = 8000   // slow & safe
 
-// FIXED REAL NAMES
 const BOT_NAMES = [
   "YagiSheep",
   "Istieler",
   "dreamguy",
   "demons_here",
-  "Sm_Gop",
-  "ShadowX",
-  "FireLad",
-  "KnightOP",
-  "DarkSoul",
-  "IceWolf",
-  "RogueYT",
-  "SwiftKill"
-]
-
-// NO reconnects
-// NO chat
-// NO movement
+  "Sm_Gop"
+] // START WITH 5 ONLY
 
 let index = 0
 
 function startBot(name) {
+  console.log("Attempting:", name)
+
   const bot = mineflayer.createBot({
     host: HOST,
     port: PORT,
     username: name,
-    version: false,
-    hideErrors: true
+    version: false
   })
 
   bot.on("login", () => {
-    console.log(`[+] ${name} logged in`)
+    console.log("[LOGIN OK]", name)
   })
 
   bot.on("spawn", () => {
-    console.log(`[✓] ${name} spawned`)
+    console.log("[SPAWN OK]", name)
   })
 
-  // 🚫 DISABLE CHAT COMPLETELY (FIXES crash)
-  bot.removeAllListeners("chat")
-  bot._client.removeAllListeners("chat")
-  bot._client.removeAllListeners("player_chat")
-
   bot.on("kicked", reason => {
-    console.log(`[KICKED] ${name}`)
+    console.log("[KICKED]", name, reason)
   })
 
   bot.on("error", err => {
-    console.log(`[ERROR] ${name}: ${err.message}`)
+    console.log("[ERROR]", name, err.message)
   })
 }
 
-// JOIN ONE BY ONE ONLY
-const joinInterval = setInterval(() => {
+const interval = setInterval(() => {
   if (index >= BOT_NAMES.length) {
-    clearInterval(joinInterval)
-    console.log("All bots attempted.")
+    clearInterval(interval)
+    console.log("Done attempting bots.")
     return
   }
 
-  const name = BOT_NAMES[index]
-  console.log(`Starting bot ${index + 1}: ${name}`)
-  startBot(name)
+  startBot(BOT_NAMES[index])
   index++
-
 }, JOIN_DELAY)
 
-// Keep Railway alive
 setInterval(() => {
-  console.log("Alive | Bots attempted:", index)
+  console.log("Alive | Tried:", index)
 }, 60000)

@@ -4,7 +4,7 @@ console.log("=== REAL NAME BOT SCRIPT ACTIVE ===")
 
 const HOST = "budget-1.vulcanmc.fun"
 const PORT = 25007
-const JOIN_DELAY = 8000
+const JOIN_DELAY = 8001
 
 // 👇 REAL PLAYER-LIKE NAMES (EDIT HERE)
 const BOT_NAMES = [

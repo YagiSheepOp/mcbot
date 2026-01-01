@@ -2,54 +2,39 @@ const mineflayer = require("mineflayer")
 
 const SERVER_IP = "budget-1.vulcanmc.fun"
 const SERVER_PORT = 25007
+const BOT_COUNT = 5        // ⚠️ Railway realistic limit
+const JOIN_DELAY = 8000    // VERY slow
 
-const BOT_COUNT = 15          // ✅ change here (10–20)
-const JOIN_DELAY = 5000       // ✅ VERY IMPORTANT (5 sec)
-
-let activeBots = 0
+let started = 0
 
 function randomName() {
-  const chars = "abcdefghijklmnopqrstuvwxyz"
-  let name = "GCart"
-  for (let i = 0; i < 6; i++) {
-    name += chars[Math.floor(Math.random() * chars.length)]
-  }
-  return name
+  return "Bot_" + Math.random().toString(36).substring(2, 8)
 }
 
 function startBot() {
-  if (activeBots >= BOT_COUNT) return
-
-  const username = randomName()
-  activeBots++
+  if (started >= BOT_COUNT) return
+  started++
 
   const bot = mineflayer.createBot({
     host: SERVER_IP,
     port: SERVER_PORT,
-    username: username,
+    username: randomName(),
     version: false
   })
 
-  bot.once("login", () => {
-    console.log(`[+] ${username} joined (${activeBots}/${BOT_COUNT})`)
+  bot.on("login", () => {
+    console.log(`[+] ${bot.username} joined`)
+    
+    // behave like human
+    setInterval(() => {
+      bot.setControlState("jump", true)
+      setTimeout(() => bot.setControlState("jump", false), 500)
+      bot.chat("hello")
+    }, 30000)
   })
 
-  bot.once("end", () => {
-    console.log(`[-] ${username} disconnected`)
-  })
-
-  bot.once("error", err => {
-    console.log(`[!] ${username}: ${err.message}`)
-  })
+  bot.on("kicked", r => console.log("Kicked:", r))
+  bot.on("error", e => console.log("Err:", e.message))
 }
 
-// JOIN bots SLOWLY
-let interval = setInterval(() => {
-  startBot()
-  if (activeBots >= BOT_COUNT) clearInterval(interval)
-}, JOIN_DELAY)
-
-// Prevent Railway idle
-setInterval(() => {
-  console.log(`Alive | Bots target: ${BOT_COUNT}`)
-}, 60000)
+setInterval(startBot, JOIN_DELAY)

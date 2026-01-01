@@ -1,13 +1,11 @@
 const mineflayer = require("mineflayer")
 
-// ===== SERVER DETAILS =====
-const SERVER_IP = "budget-1.vulcanmc.fun"
-const SERVER_PORT = 25007
+/* ========= SERVER CONFIG ========= */
+const HOST = "budget-1.vulcanmc.fun"
+const PORT = 25007
 
-// ===== JOIN SETTINGS =====
-const JOIN_DELAY = 5000 // 5 seconds between each bot
-
-// ===== REAL BOT NAMES (EDIT HERE) =====
+/* ========= BOT SETTINGS ========= */
+const JOIN_DELAY = 6000   // 6 seconds (IMPORTANT)
 const BOT_NAMES = [
   "YagiSheep",
   "Istieler",
@@ -16,71 +14,62 @@ const BOT_NAMES = [
   "Sm_Gop",
   "ShadowX",
   "FireLad",
-  "PvPGod",
   "KnightOP",
-  "NoobSlayer",
   "DarkSoul",
   "IceWolf",
   "RogueYT",
-  "SwiftKill",
-  "GhostPvP"
-]
+  "SwiftKill"
+] // 👈 12 bots (same as before)
 
-// ===========================
+/* ================================= */
 
-let currentIndex = 0
+let i = 0
 
-function startBot(username) {
+function createBot(name) {
   const bot = mineflayer.createBot({
-    host: SERVER_IP,
-    port: SERVER_PORT,
-    username: username,
-    version: false // auto-detect
+    host: HOST,
+    port: PORT,
+    username: name,
+    version: false
   })
 
   bot.on("login", () => {
-    console.log(`[+] ${username} joined the server`)
+    console.log(`[+] ${name} logged in`)
+  })
+
+  bot.on("spawn", () => {
+    console.log(`[✓] ${name} spawned`)
   })
 
   bot.on("end", () => {
-    console.log(`[-] ${username} disconnected`)
+    console.log(`[-] ${name} disconnected`)
   })
 
   bot.on("kicked", reason => {
-    console.log(`[KICKED] ${username}:`, reason)
+    console.log(`[KICKED] ${name}:`, reason)
   })
 
   bot.on("error", err => {
-    console.log(`[ERROR] ${username}: ${err.message}`)
-  })
-
-  // Anti-AFK (light)
-  bot.once("spawn", () => {
-    setInterval(() => {
-      try {
-        bot.setControlState("jump", true)
-        setTimeout(() => bot.setControlState("jump", false), 300)
-      } catch {}
-    }, 30000)
+    console.log(`[ERROR] ${name}: ${err.message}`)
   })
 }
 
-// ===== START BOTS ONE BY ONE =====
-const joinInterval = setInterval(() => {
-  if (currentIndex >= BOT_NAMES.length) {
+/* ===== JOIN ONE BY ONE (IMPORTANT) ===== */
+const interval = setInterval(() => {
+  if (i >= BOT_NAMES.length) {
     console.log("All bots attempted.")
-    clearInterval(joinInterval)
+    clearInterval(interval)
     return
   }
 
-  const name = BOT_NAMES[currentIndex]
-  console.log(`Starting bot: ${name}`)
-  startBot(name)
-  currentIndex++
+  const name = BOT_NAMES[i]
+  console.log(`Starting bot ${i + 1}: ${name}`)
+  createBot(name)
+  i++
 
 }, JOIN_DELAY)
 
-// ===== KEEP RAILWAY ALIVE =====
+/* ===== KEEP RAILWAY PROCESS ALIVE ===== */
 setInterval(() => {
-  console.log("Service alive | Bots planned:", BOT_NAMES.length)
+  console.log("Alive | Bots:", i, "/", BOT_NAMES.length)
 }, 60000)

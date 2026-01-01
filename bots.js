@@ -7,7 +7,7 @@ const JOIN_DELAY = 3000
 
 function randomName() {
   const chars = "abcdefghijklmnopqrstuvwxyz"
-  let name = "Bot_"
+  let name = "_YagiSheep_"
   for (let i = 0; i < 6; i++) {
     name += chars[Math.floor(Math.random() * chars.length)]
   }
